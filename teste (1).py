@@ -1,10 +1,11 @@
 import tkinter
 from tkinter import messagebox as mb
 from tkinter import ttk
+from tkinter import *
+from PIL import Image, ImageTk
 import sqlite3
 
-#começar com tela com um botão e um entry (nome)- v1
-#adicionar mais duas entrys (cpf e estado) e suas labels - v2
+
 #mudar o fundo para uma imagem mais bonita, adicionar readme.txt explicando como usar - v3
 #adicionar clicar no botão salva os 3 dados em um sqlite - v4
 #Criar uma branch em que le um config.txt com uma lista de 5 estados possiveis separados por pular linha - x1
@@ -16,6 +17,8 @@ import sqlite3
 
 #Cria conexção
 connection = sqlite3.connect("teste.db")
+
+
 
 #Cria o cursos e cria a tabela
 cursor = connection.cursor()
@@ -44,8 +47,25 @@ def Main():
     root = tkinter.Tk()
     root.title("Trabalho RAD")
     root.resizable(False, False)
+    root.geometry("600x400")
+    image = Image.open("ceuazul.png")
+    photo = ImageTk.PhotoImage(image)
+    background_label = ttk.Label(root, image=photo)
+    background_label.place(relwidth=1, relheight=1)
+
+    frame = tkinter.Frame(root, bg='white')
+    frame.place(relx=0.5, rely=0.5, anchor='center')
     
+
     label = tkinter.Label(root, text="Nome")
+    label.pack()
+
+    textoEntrada = tkinter.StringVar()
+    e1 = tkinter.Entry(root)
+    e1.bind('<Key>', lambda x:textoEntrada.set(e1.get()+x.char))
+    e1.pack()
+
+    label = tkinter.Label(root, text="Cpf")
     label.pack()
 
     textoEntrada = tkinter.StringVar()
@@ -61,14 +81,6 @@ def Main():
     e1.bind('<Key>', lambda x:textoEntrada.set(e1.get()+x.char))
     e1.pack()
 
-    label = tkinter.Label(root, text="Cpf")
-    label.pack()
-
-    textoEntrada = tkinter.StringVar()
-    e1 = tkinter.Entry(root)
-    e1.bind('<Key>', lambda x:textoEntrada.set(e1.get()+x.char))
-    e1.pack()
-    
     test2 = tkinter.Button(root, text="Salvar")
     test2['command'] = funcExemplo  #alterar para chamar outra função
     test2.pack()
