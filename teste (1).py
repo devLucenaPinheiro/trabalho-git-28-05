@@ -5,9 +5,13 @@ from tkinter import *
 from PIL import Image, ImageTk
 import sqlite3
 
-
+#Criar uma branch em que le um config.txt com uma lista de 5 estados possiveis separados por pular linha - x1
+#Mudar o separador para ; e adicionar mais 5 estados - x2
+#Voltar para main, criar outra branch e criar um dropdown com 3 opções (clt, mei, socio) - y1
+#Voltar para main, Corrigir o bug da função de cpf - v5
 #Merge de x com v - v6
 #Adicionar verificação de CPF e de estado, com base na função cpf e na lista de estados .txt antes de adicionar no sqlite v7
+
 
 # Cria conexão
 connection = sqlite3.connect("teste.db")
@@ -31,6 +35,15 @@ def VerificarCPF(CPF):
         except ValueError:
             return False
     return True
+
+def ler_estados_config():
+    estados = []
+    try:
+        with open("config.txt", "r") as file:
+            estados = file.read().strip().split(";")
+    except FileNotFoundError:
+        mb.showerror("Erro", "Arquivo config.txt não encontrado!")
+    return estados
 
 def inserevalores(nome, cpf, estado):
     # Insere linha na tabela
@@ -78,6 +91,12 @@ def Main():
     estado_var = tkinter.StringVar()
     estado_entry = tkinter.Entry(frame, textvariable=estado_var)
     estado_entry.grid(row=2, column=1)
+
+    estados = ler_estados_config()
+
+    estado_var = tkinter.StringVar()
+    estado_combo = ttk.Combobox(frame, textvariable=estado_var, values=estados)
+    estado_combo.grid(row=2, column=1)
 
     def salvar():
         nome = nome_var.get()
