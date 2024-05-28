@@ -5,23 +5,12 @@ from tkinter import *
 from PIL import Image, ImageTk
 import sqlite3
 
-#Criar uma branch em que le um config.txt com uma lista de 5 estados possiveis separados por pular linha - x1
-#Mudar o separador para ; e adicionar mais 5 estados - x2
-#Voltar para main, criar outra branch e criar um dropdown com 3 opções (clt, mei, socio) - y1
-#Voltar para main, Corrigir o bug da função de cpf - v5
-#Merge de x com v - v6
-#Adicionar verificação de CPF e de estado, com base na função cpf e na lista de estados .txt antes de adicionar no sqlite v7
-
-
-# Cria conexão
 connection = sqlite3.connect("teste.db")
 
-# Cria o cursor e a tabela
 cursor = connection.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS Tabela1 (nome TEXT, cpf TEXT, estado TEXT)")
 
 def VerificarCPF(CPF):
-    # Verifica se o CPF está no formato "123.456.789-10"
     partes = CPF.split("-")
     if len(partes) != 2 or len(partes[1]) != 2:
         return False
@@ -31,7 +20,7 @@ def VerificarCPF(CPF):
         if len(trecho) != 3:
             return False
         try:
-            int(trecho)  # Verifica se é numérico
+            int(trecho) 
         except ValueError:
             return False
     return True
@@ -46,13 +35,11 @@ def ler_estados_config():
     return estados
 
 def inserevalores(nome, cpf, estado):
-    # Insere linha na tabela
     cursor.execute("INSERT INTO Tabela1 VALUES (?, ?, ?)", (nome, cpf, estado))
     connection.commit()
     mb.showinfo("Info", "Dados salvos com sucesso!")
 
 def pegavalores():
-    # Pega valores da tabela
     rows = cursor.execute("SELECT * FROM Tabela1").fetchall()
     print(rows)
 
@@ -62,7 +49,6 @@ def Main():
     root.resizable(False, False)
     root.geometry("600x400")
 
-    # Adicionando a imagem de fundo
     image = Image.open("background-azul.jpg")
     photo = ImageTk.PhotoImage(image)
     background_label = ttk.Label(root, image=photo)
@@ -88,10 +74,6 @@ def Main():
     label = tkinter.Label(frame, text="Estado")
     label.grid(row=2, column=0)
 
-    estado_var = tkinter.StringVar()
-    estado_entry = tkinter.Entry(frame, textvariable=estado_var)
-    estado_entry.grid(row=2, column=1)
-
     estados = ler_estados_config()
 
     estado_var = tkinter.StringVar()
@@ -103,7 +85,10 @@ def Main():
         cpf = cpf_var.get()
         estado = estado_var.get()
         if VerificarCPF(cpf):
-            inserevalores(nome, cpf, estado)
+            if estado in estados:
+                inserevalores(nome, cpf, estado)
+            else:
+                mb.showerror("Erro", "Estado inválido!")
         else:
             mb.showerror("Erro", "CPF inválido!")
 
