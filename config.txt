@@ -1,5 +1,1 @@
-Rio de Janeiro
-Sao Paulo
-Minas Gerais
-Rio Grande do Sul
-Ceara
+Rio de Janeiro; Sao Paulo; Minas Gerais; Rio Grande do Sul; Ceara; Goias; Mato Grosso; Tocantins; Amazonas; Acre
