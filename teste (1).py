@@ -5,10 +5,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 import sqlite3
 
-#Criar uma branch em que le um config.txt com uma lista de 5 estados possiveis separados por pular linha - x1
-#Mudar o separador para ; e adicionar mais 5 estados - x2
-#Voltar para main, criar outra branch e criar um dropdown com 3 opções (clt, mei, socio) - y1
-#Voltar para main, Corrigir o bug da função de cpf - v5
+
 #Merge de x com v - v6
 #Adicionar verificação de CPF e de estado, com base na função cpf e na lista de estados .txt antes de adicionar no sqlite v7
 
@@ -20,7 +17,7 @@ cursor = connection.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS Tabela1 (nome TEXT, cpf TEXT, estado TEXT)")
 
 def VerificarCPF(CPF):
-    # CPF deve ser na forma "123.456.789-10"
+    # Verifica se o CPF está no formato "123.456.789-10"
     partes = CPF.split("-")
     if len(partes) != 2 or len(partes[1]) != 2:
         return False
@@ -28,6 +25,10 @@ def VerificarCPF(CPF):
         return False
     for trecho in partes[0].split("."):
         if len(trecho) != 3:
+            return False
+        try:
+            int(trecho)  # Verifica se é numérico
+        except ValueError:
             return False
     return True
 
@@ -49,7 +50,7 @@ def Main():
     root.geometry("600x400")
 
     # Adicionando a imagem de fundo
-    image = Image.open("ceuazul.png")
+    image = Image.open("background-azul.jpg")
     photo = ImageTk.PhotoImage(image)
     background_label = ttk.Label(root, image=photo)
     background_label.place(relwidth=1, relheight=1)
