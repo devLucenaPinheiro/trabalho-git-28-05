@@ -5,8 +5,6 @@ from tkinter import *
 from PIL import Image, ImageTk
 import sqlite3
 
-#Criar uma branch em que le um config.txt com uma lista de 5 estados possiveis separados por pular linha - x1
-#Mudar o separador para ; e adicionar mais 5 estados - x2
 #Voltar para main, criar outra branch e criar um dropdown com 3 opções (clt, mei, socio) - y1
 #Voltar para main, Corrigir o bug da função de cpf - v5
 #Merge de x com v - v6
@@ -17,7 +15,7 @@ connection = sqlite3.connect("teste.db")
 
 # Cria o cursor e a tabela
 cursor = connection.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS Tabela1 (nome TEXT, cpf TEXT, estado TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS Tabela1 (nome TEXT, cpf TEXT, estado TEXT, tipo TEXT)")
 
 def VerificarCPF(CPF):
     # CPF deve ser na forma "123.456.789-10"
@@ -31,9 +29,9 @@ def VerificarCPF(CPF):
             return False
     return True
 
-def inserevalores(nome, cpf, estado):
+def inserevalores(nome, cpf, estado, tipo):
     # Insere linha na tabela
-    cursor.execute("INSERT INTO Tabela1 VALUES (?, ?, ?)", (nome, cpf, estado))
+    cursor.execute("INSERT INTO Tabela1 VALUES (?, ?, ?, ?)", (nome, cpf, estado, tipo))
     connection.commit()
     mb.showinfo("Info", "Dados salvos com sucesso!")
 
@@ -78,17 +76,26 @@ def Main():
     estado_entry = tkinter.Entry(frame, textvariable=estado_var)
     estado_entry.grid(row=2, column=1)
 
+    label = tkinter.Label(frame, text="Tipo")
+    label.grid(row=3, column=0)
+
+    tipo_var = tkinter.StringVar()
+    tipo_combobox = ttk.Combobox(frame, textvariable=tipo_var)
+    tipo_combobox['values'] = ("CLT", "MEI", "Sócio")
+    tipo_combobox.grid(row=3, column=1)
+
     def salvar():
         nome = nome_var.get()
         cpf = cpf_var.get()
         estado = estado_var.get()
+        tipo = tipo_var.get()
         if VerificarCPF(cpf):
-            inserevalores(nome, cpf, estado)
+            inserevalores(nome, cpf, estado, tipo)
         else:
             mb.showerror("Erro", "CPF inválido!")
 
     salvar_btn = tkinter.Button(frame, text="Salvar", command=salvar)
-    salvar_btn.grid(row=3, columnspan=2)
+    salvar_btn.grid(row=4, columnspan=2)
 
     root.mainloop()
 
